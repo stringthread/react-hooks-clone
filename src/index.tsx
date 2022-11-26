@@ -1,6 +1,6 @@
 import React, {
   useState as useStateReactOfficial,
-  useEffect as useEffectReactOfficial
+  useEffect as useEffectReactOfficial,
 } from "react";
 import { createRoot } from "react-dom/client";
 import { v4 as uuid } from "uuid";
@@ -27,7 +27,7 @@ class CellsForComponent {
   // 初期値を持ったMemoryCellを作ることで初期化
   addCell(val: CellValue): MemoryCell {
     const newCell: MemoryCell = {
-      current: val
+      current: val,
     };
     this.cells.push(newCell);
     return newCell;
@@ -43,9 +43,11 @@ const useComponentKey = (): ComponentKey => useStateReactOfficial(uuid())[0];
 const componentsFinishedFirstRendering: Set<ComponentKey> = new Set();
 
 // 自作Hookを使いたいときのコンポーネント型
-type HookableFC<P extends object> = React.FC<P & { _component_key: ComponentKey }>;
+type HookableFC<P extends object> = React.FC<
+  P & { _component_key: ComponentKey }
+>;
 // HookableFCを通常のコンポーネントに変換するラッパ
-const HookWrap = <P extends object>(Component: HookableFC<P,>): React.FC<P,> => {
+const HookWrap = <P extends object>(Component: HookableFC<P>): React.FC<P> => {
   return (props: P) => {
     const key = useComponentKey(); // `react-hooks/rules-of-hooks`でLinterに怒られるが問題ない
     // ここでReact公式が提供するHookを使用
