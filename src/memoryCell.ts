@@ -37,6 +37,8 @@ export class CellsForComponent {
   }
 }
 
+export type ComponentKey = string | number;
+
 // コンポーネントごとのMemoryCellを格納するMap
 export const store = new Map<ComponentKey, CellsForComponent>();
 

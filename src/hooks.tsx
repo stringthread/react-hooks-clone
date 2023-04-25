@@ -26,7 +26,7 @@ const useForceUpdate = () => {
 
 // 自作のUseState Hook
 // 初期値に関数を受け取るパターンは対応していない
-export const useState = <T>(initial: T, key: ComponentKey): [T, (val: T) => void] => {
+export const useState = <T,>(initial: T, key: ComponentKey): [T, (val: T) => void] => {
   const cell = useCell(key);
   if (cell.current === emptyInitializationSymbol) {
     cell.current = initial;
