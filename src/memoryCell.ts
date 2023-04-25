@@ -9,27 +9,36 @@ export type MemoryCell = {
 
 // コンポーネント1つ分のMemoryCellたち
 export class CellsForComponent {
-  index: number = 0; // データ群上の位置
-  cells: MemoryCell[] = []; // データ群
-  // データ取得関数
-  getAndNext(): MemoryCell {
-    if (this.cells.length === 0) throw RangeError("No cells now.");
-    const prev_index = this.index;
-    this.index++;
-    if (this.index >= this.cells.length) {
-      this.index = 0;
-    }
-    return this.cells[prev_index];
+  private cells: MemoryCell[];
+
+  constructor() {
+    this.cells = [];
   }
-  // 初期値を持ったMemoryCellを作ることで初期化
-  addCell(val: CellValue): MemoryCell {
-    const newCell: MemoryCell = {
-      current: val,
-    };
-    this.cells.push(newCell);
-    return newCell;
+
+  // 新しいセルを追加してその値を返す
+  addCell(initialValue: CellValue): MemoryCell {
+    const cell: MemoryCell = { current: initialValue };
+    this.cells.push(cell);
+    return cell;
+  }
+
+  // 現在のセルの値を取得し、次のセルを返す
+  getAndNext(): MemoryCell {
+    const currentCell = this.cells.shift();
+    if (currentCell) {
+      const nextCell = this.cells[0];
+      if (!nextCell) {
+        throw new Error("MemoryCell: No next cell found.");
+      }
+      return nextCell;
+    } else {
+      throw new Error("MemoryCell: No current cell found.");
+    }
   }
 }
-export type ComponentKey = string;
-export type GlobalStore = Map<ComponentKey, CellsForComponent>; // 全体のMemoryCellを統括管理するオブジェクトの型
-export const store: GlobalStore = new Map(); // 全体のMemoryCellを統括管理するインスタンス
+
+// コンポーネントごとのMemoryCellを格納するMap
+export const store = new Map<ComponentKey, CellsForComponent>();
+
+// 初回レンダリングが終了したコンポーネントのComponentKeyを格納するSet
+export const componentsFinishedFirstRendering = new Set<ComponentKey>();
